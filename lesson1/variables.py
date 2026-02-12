@@ -1,4 +1,4 @@
-temperature = 44.2
+0.temperature = 44.2
 name = "Melina"
 
 print(type(temperature))
