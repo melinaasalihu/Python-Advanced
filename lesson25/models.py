@@ -1,8 +1,9 @@
 from pydantic import BaseModel
 
-class MovieCreate(BaseModel):
-    title: str
-    director: str
+class RecipeCreate(BaseModel):
+    name: str
+    description: str
+    ingredients: str
 
-class Movie(MovieCreate):
+class Recipe(RecipeCreate):
     id: int
