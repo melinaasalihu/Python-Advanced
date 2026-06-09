@@ -4,7 +4,7 @@ from models import Recipe, RecipeCreate
 
 def create_connection():
     connection = sqlite3.connect("recipe.db")
-    # This allows accessing columns by name (e.g., row["name"])
+
     connection.row_factory = sqlite3.Row
     return connection
 
@@ -12,7 +12,7 @@ def create_connection():
 def create_table():
     connection = create_connection()
     cursor = connection.cursor()
-    # FIXED: Added a missing comma after 'description text not null'
+
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS recipe (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,11 +25,11 @@ def create_table():
     connection.close()
 
 
-# Initialize the table
+
 create_table()
 
 
-# FIXED: Renamed to create_recipe, fixed parameter names, SQL placeholders, and syntax
+
 def create_recipe(recipe: RecipeCreate) -> int:
     connection = create_connection()
     cursor = connection.cursor()
@@ -44,7 +44,6 @@ def create_recipe(recipe: RecipeCreate) -> int:
     return recipe_id
 
 
-# FIXED: Renamed to read_recipes and mapped to the Recipe model
 def read_recipes():
     connection = create_connection()
     cursor = connection.cursor()
@@ -52,7 +51,7 @@ def read_recipes():
     rows = cursor.fetchall()
     connection.close()
 
-    # Using row keys since row_factory = sqlite3.Row is enabled
+
     recipes = [
         Recipe(
             id=row["id"],
@@ -64,7 +63,7 @@ def read_recipes():
     return recipes
 
 
-# FIXED: Renamed to read_recipe and fixed mapping
+
 def read_recipe(recipe_id: int):
     connection = create_connection()
     cursor = connection.cursor()
@@ -83,7 +82,7 @@ def read_recipe(recipe_id: int):
     )
 
 
-# FIXED: Renamed to update_recipe and updated SQL structure
+
 def update_recipe(recipe_id: int, recipe: RecipeCreate) -> bool:
     connection = create_connection()
     cursor = connection.cursor()
@@ -97,7 +96,7 @@ def update_recipe(recipe_id: int, recipe: RecipeCreate) -> bool:
     return updated > 0
 
 
-# FIXED: Renamed to delete_recipe
+
 def delete_recipe(recipe_id: int) -> bool:
     connection = create_connection()
     cursor = connection.cursor()
