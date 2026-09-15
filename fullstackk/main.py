@@ -1,0 +1,44 @@
+from http.client import HTTPException
+
+from fastapi import FastAPI
+from typing import List
+import database
+import models
+from models import Movie , MovieCreate
+
+app = FastAPI()
+
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to api crud"}
+
+@app.post("/movies/", response_model=Movie)
+def create_movie(movie: MovieCreate):
+    movie_id = database.create_movie(movie)
+    return models.Movie(id=movie_id , **movie.dict())
+
+
+@app.get("/movies/", response_model=List[Movie])
+def read_movies():
+    return database.read_movies()
+
+@app.put("/movies/{movie_id}", response_model=Movie)
+def update_movies(movie_id: int, movie:MovieCreate):
+    updated = database.update_movie(movie_id,movie)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Movie not Found")
+    return models.Movie(id=movie_id, **movie.dict())
+
+@app.delete("/movies/{movie_id}", response_model=dict)
+def delete_movies(movie_id: int):
+    deleted = database.delete_movie(movie_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Movie not Found")
+    return {"message": "Movie got deleted"}
+
+
+
+
+
+
+
