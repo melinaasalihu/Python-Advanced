@@ -2,6 +2,8 @@ from fastapi import APIRouter, HTTPException
 
 import crud
 
+from models import DestinationCreate, DestinationUpdate
+
 
 router = APIRouter(
     prefix="/destinations",
@@ -9,63 +11,38 @@ router = APIRouter(
 )
 
 
+
 # =========================
 # CREATE
 # =========================
 
 @router.post("/")
-def create_destination(data: dict):
-
-    if not data.get("country"):
-        raise HTTPException(
-            status_code=400,
-            detail="Country is required."
-        )
-
-    if not data.get("city"):
-        raise HTTPException(
-            status_code=400,
-            detail="City is required."
-        )
+def create_destination(data: DestinationCreate):
 
     destination = crud.create_destination(
 
-        country=data["country"],
+        country=data.country,
 
-        city=data["city"],
+        city=data.city,
 
-        budget=data.get("budget", 0),
+        budget=data.budget,
 
-        priority=data.get(
-            "priority",
-            "Medium"
-        ),
+        priority=data.priority,
 
-        status=data.get(
-            "status",
-            "Wishlist"
-        ),
+        status=data.status,
 
-        travel_date=data.get(
-            "travel_date",
-            ""
-        ),
+        travel_date=data.travel_date,
 
-        notes=data.get(
-            "notes",
-            ""
-        ),
+        notes=data.notes,
 
         capital="",
-
         region="",
-
         currency="",
-
         flag=""
     )
 
     return destination
+
 
 
 # =========================
@@ -106,15 +83,12 @@ def get_destination(destination_id: int):
 @router.put("/{destination_id}")
 def update_destination(
     destination_id: int,
-    data: dict
+    data: DestinationUpdate
 ):
 
-    old = crud.get_destination(
-        destination_id
-    )
+    old = crud.get_destination(destination_id)
 
     if not old:
-
         raise HTTPException(
             status_code=404,
             detail="Destination not found."
@@ -124,47 +98,23 @@ def update_destination(
 
         destination_id,
 
-        data.get(
-            "country",
-            old["country"]
-        ),
+        data.country if data.country is not None else old["country"],
 
-        data.get(
-            "city",
-            old["city"]
-        ),
+        data.city if data.city is not None else old["city"],
 
-        data.get(
-            "budget",
-            old["budget"]
-        ),
+        data.budget if data.budget is not None else old["budget"],
 
-        data.get(
-            "priority",
-            old["priority"]
-        ),
+        data.priority if data.priority is not None else old["priority"],
 
-        data.get(
-            "status",
-            old["status"]
-        ),
+        data.status if data.status is not None else old["status"],
 
-        data.get(
-            "travel_date",
-            old["travel_date"]
-        ),
+        data.travel_date if data.travel_date is not None else old["travel_date"],
 
-        data.get(
-            "notes",
-            old["notes"]
-        ),
+        data.notes if data.notes is not None else old["notes"],
 
         old["capital"],
-
         old["region"],
-
         old["currency"],
-
         old["flag"]
     )
 
